@@ -3413,5 +3413,6 @@
   "assets/effects/loot-beam/frame-06.png": "bb7c0822740e14c2ea9123e74266b14f9d1342cacd0dc06b7a97fbc7f484e125",
   "assets/effects/loot-beam/frame-07.png": "95e601ca28da3c8fba9446fd01a6fedb2b40ea1e7e33b4a840b53a36076c06b0",
   "assets/effects/loot-beam/frame-08.png": "df4ecb0fb2c8e5e63c277acc03ce1be709ddc288f66695bd9dfff8dcaaca9608",
-  "assets/interface/logicon.png": "8f2221e0d73c5d01d8cdd1ebe8677a82598dfb3f7ad1cd407a2f830f855ed05d"
+  "assets/interface/logicon.png": "8f2221e0d73c5d01d8cdd1ebe8677a82598dfb3f7ad1cd407a2f830f855ed05d",
+  "assets/items/slayer-gear/dragon-defender.png": "8cb69da55a160c4756fc9b77d65bff7f8be4ad60c31c4aed5208004366b8b86d"
 }
