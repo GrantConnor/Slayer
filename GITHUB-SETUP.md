@@ -1,23 +1,42 @@
-# Slayer Hub Alpha 1.9.13 — updater setup
+# Slayer Hub — private Git update setup
 
-Source repo: private `GrantConnor/Slayer`. Distribution feed: public `GrantConnor/Slayer-Hub-Releases` (create it separately, with a README). Publishing releases makes compiled game files and artwork publicly downloadable; source repository stays private, but Electron packages are not secret or DRM-protected. Do not publish if you lack distribution rights or want playtester-only access.
+The current distribution uses one private repository: GrantConnor/Slayer.
+The installer updater and separate release feed configuration are retained for
+future use only; no release repository is needed for Git-based updates.
 
-## Initial source upload
-Extract the entire source ZIP. If the private repo is empty, run from the extracted folder:
+## One-time setup (Windows)
+
+Install Git for Windows and Node.js LTS. In a parent folder, run:
 
 ```bat
-git init -b main
-git add .
-git commit -m "Slayer Hub 1.9.13 updater"
-git remote add origin https://github.com/GrantConnor/Slayer.git
-git push -u origin main
+git clone https://github.com/GrantConnor/Slayer.git Slayer
+cd Slayer
+Play-Slayer.cmd
 ```
-If it already contains commits, clone it and copy the source into that clone, then commit and push. Do not force push. No saves or credentials should be committed.
 
-## Windows installer
-Run `Build-Installer.cmd` on Windows or use Actions > Windows installer > Run workflow in the private repository (leave publish_release unchecked to build only). Download the installer artifact, extract it, and run `Slayer-Hub-Setup-1.9.13.exe`. The source `Build-and-Play.cmd` is still supported but does not auto-update.
+Sign into GitHub when Git Credential Manager asks. If you already have a
+clean checkout of this repository on main, run `git pull --ff-only` once,
+then launch Play-Slayer.cmd (or Build-and-Play.cmd inside the checkout).
 
-## Publish updates
-Create the public release repository first. For automated publishing create a fine-grained GitHub PAT limited to that release repository with Contents read/write, and store it in the PRIVATE source repository Actions secret `RELEASE_TOKEN`. Never put it in source or the client. Run the workflow with publish_release checked only when ready to distribute publicly. Alternatively, create a GitHub release tagged `v1.9.13` in the public release repo and upload the installer, `.exe.blockmap` and `latest.yml` together; publish as a normal release (not draft/prerelease). For subsequent releases increment package.json version and matching UI/window version, then build and publish a new tag. Do not overwrite old releases. Keep the generated feed metadata unmodified.
+On subsequent launches, Play-Slayer checks origin/main and fast-forwards
+only if the checkout is clean. If Git cannot fetch, the launcher attempts
+to play the local version. It never forces a reset or embeds credentials.
+Dependencies must already be installed for offline play; the first launch
+and dependency changes may require internet access. Close the game before
+launching again. The game launches directly from the checkout, not the old
+Portable directory or installed executable.
 
-Installed Windows clients check after game boot, download updates in the background, and install on normal close after a successful save. Reopen the game after installation finishes. Check for updates is available in-game. Offline or failed checks do not prevent gameplay. Existing saves remain in `%APPDATA%/Slayer Hub/saves` and are not packaged. Back up saves before the first installer test. The installer is unsigned; SmartScreen warnings are possible. SHA-512 verification is handled by electron-updater, but code signing is recommended before wider distribution. Test initial install and a real next-version update on Windows before sharing.
+Friends must have their own authorized GitHub access to the private repo
+and must clone and authenticate on their own PCs. Do not share tokens.
+Giving repository access also gives access to the game source and assets.
+
+Saves remain in %APPDATA%/Slayer Hub/saves. Back up character.json and
+character.json.bak before switching launch methods. No Git operation
+targets that folder.
+
+## Future installer distribution
+
+The separate public release feed and installer workflow from 1.9.13 remain
+dormant. Do not enable release publishing until a distribution method is
+explicitly approved. Build-Installer.cmd can still build a local installer,
+but Git updates only work through the Git checkout launcher.
