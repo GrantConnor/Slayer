@@ -76,8 +76,14 @@ try {
         Set-Content -LiteralPath $marker -Value $fingerprint -Encoding UTF8
     }
     Write-Host "Launching Slayer Hub Alpha $($pkg.version)"
-    & npm.cmd start
-    exit $LASTEXITCODE
+    # Launch Electron as a separate Windows GUI process, without waiting for it.
+    $electron = Join-Path $PSScriptRoot 'node_modules\electron\dist\electron.exe'
+    $game = Start-Process -FilePath $electron -ArgumentList '.' -WorkingDirectory $PSScriptRoot -PassThru
+    # Catch immediate startup failures; the game owns its own lifetime afterward.
+    if ($game.WaitForExit(1500) -and $game.ExitCode -ne 0) {
+        throw "Electron exited during startup (code $($game.ExitCode))."
+    }
+    exit 0
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Red
     exit 1
