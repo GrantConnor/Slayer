@@ -7,7 +7,7 @@ function setupUpdater(win) {
   const supported=process.platform==='win32'&&app.isPackaged&&fs.existsSync(path.join(process.resourcesPath,'app-update.yml'));
   if(supported){try{updater=require('electron-updater').autoUpdater;}catch(e){console.error('Updater unavailable:',e);}}
   function check(interactive=false){
-    if(!updater){if(interactive)send('Automatic updates require the installed Windows release.');return;}
+    if(!updater){if(interactive)send('For private Git updates, close the game and reopen using Play-Slayer.cmd. Installed-release updates require a published feed.');return;}
     if(downloaded){send('Update ready. Close and reopen Slayer Hub to install.');return;}
     if(state==='checking'||state==='downloading'){if(interactive)send('Update check/download already running.');return;}
     manual=interactive;state='checking';send('Checking for updates…');
