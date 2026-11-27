@@ -1,0 +1,60 @@
+{
+  "name": "slayer-hub",
+  "version": "1.9.13",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "39.2.7",
+    "electron-builder": "26.0.12"
+  },
+  "productName": "Slayer Hub",
+  "description": "Slayer Hub idle RPG",
+  "author": "Slayer Hub",
+  "dependencies": {
+    "electron-updater": "6.6.2"
+  },
+  "build": {
+    "appId": "com.grantconnor.slayerhub",
+    "productName": "Slayer Hub",
+    "asar": true,
+    "files": [
+      "main.js",
+      "preload.js",
+      "updater.js",
+      "Slayer.html",
+      "Splash.html",
+      "Loading.gif",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Slayer-Hub-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "deleteAppDataOnUninstall": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "GrantConnor",
+        "repo": "Slayer-Hub-Releases",
+        "private": false,
+        "releaseType": "release"
+      }
+    ]
+  }
+}

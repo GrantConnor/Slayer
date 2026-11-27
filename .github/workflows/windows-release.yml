@@ -1,0 +1,45 @@
+name: Windows installer
+on:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish installer publicly to Slayer-Hub-Releases (requires RELEASE_TOKEN)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npm run dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Slayer-Hub-Windows
+          path: |
+            dist/Slayer-Hub-Setup-*.exe
+            dist/Slayer-Hub-Setup-*.exe.blockmap
+            dist/latest.yml
+          if-no-files-found: error
+      - name: Publish release (explicit opt-in)
+        if: ${{ inputs.publish_release }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          if (-not $env:GH_TOKEN) { throw 'Set RELEASE_TOKEN first' }
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          $tag = "v$version"
+          $repo = 'GrantConnor/Slayer-Hub-Releases'
+          $installer = "dist/Slayer-Hub-Setup-$version.exe"
+          $blockmap = "$installer.blockmap"
+          foreach ($file in @($installer,$blockmap,'dist/latest.yml')) { if (-not (Test-Path $file)) { throw "Missing $file" } }
+          gh release create $tag $installer $blockmap dist/latest.yml --repo $repo --title "Slayer Hub Alpha $version" --notes "Slayer Hub Alpha $version" --draft
+          if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
+          gh release edit $tag --repo $repo --draft=false --latest
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed' }

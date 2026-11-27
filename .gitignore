@@ -1,0 +1,10 @@
+node_modules/
+Portable/
+dist/
+Build.log
+*.zip
+*.exe
+*.log
+character.json
+character.json.bak
+.DS_Store
