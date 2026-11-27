@@ -1,12 +1,14 @@
-# Slayer Hub — private Git update setup
+# Slayer Hub — public GitHub updates
 
-The current distribution uses one private repository: GrantConnor/Slayer.
-The installer updater and separate release feed configuration are retained for
-future use only; no release repository is needed for Git-based updates.
+Slayer Hub is distributed from the public repository GrantConnor/Slayer.
+No GitHub account, credentials or separate release repository are required.
 
-## One-time setup (Windows)
+## One-time Windows setup
 
-Install Git for Windows and Node.js LTS. In a parent folder, run:
+Install Git for Windows and Node.js LTS. Back up the existing save folder
+at %APPDATA%/Slayer Hub/saves before switching from an old installation.
+
+Open Command Prompt in your chosen parent folder and run:
 
 ```bat
 git clone https://github.com/GrantConnor/Slayer.git Slayer
@@ -14,29 +16,20 @@ cd Slayer
 Play-Slayer.cmd
 ```
 
-Sign into GitHub when Git Credential Manager asks. If you already have a
-clean checkout of this repository on main, run `git pull --ff-only` once,
-then launch Play-Slayer.cmd (or Build-and-Play.cmd inside the checkout).
+If you already have a clean checkout on main, use its existing Play-Slayer.cmd.
+Always launch with this file, not an older installed executable, HTML file,
+or Portable directory. The launcher checks origin/main before starting,
+fast-forwards only a clean checkout and installs dependencies when necessary.
+If the network is unavailable it can play an existing local installation.
 
-On subsequent launches, Play-Slayer checks origin/main and fast-forwards
-only if the checkout is clean. If Git cannot fetch, the launcher attempts
-to play the local version. It never forces a reset or embeds credentials.
-Dependencies must already be installed for offline play; the first launch
-and dependency changes may require internet access. Close the game before
-launching again. The game launches directly from the checkout, not the old
-Portable directory or installed executable.
+## In-game update status
 
-Friends must have their own authorized GitHub access to the private repo
-and must clone and authenticate on their own PCs. Do not share tokens.
-Giving repository access also gives access to the game source and assets.
+Check GitHub updates displays the running version, latest public version and
+whether the local Git revision differs. A clean Windows checkout can save and
+restart through Play-Slayer.cmd. Same-version hotfixes are detected by revision.
+If an update is blocked by local changes, do not force reset your files.
+Close the game and run the launcher again if the restart fails.
 
-Saves remain in %APPDATA%/Slayer Hub/saves. Back up character.json and
-character.json.bak before switching launch methods. No Git operation
-targets that folder.
-
-## Future installer distribution
-
-The separate public release feed and installer workflow from 1.9.13 remain
-dormant. Do not enable release publishing until a distribution method is
-explicitly approved. Build-Installer.cmd can still build a local installer,
-but Git updates only work through the Git checkout launcher.
+The old NSIS installer has no active update feed. Players still on Alpha
+1.9.13 must switch to the public launcher once. Saves remain outside the Git
+checkout at %APPDATA%/Slayer Hub/saves; no Git operation targets this folder.
