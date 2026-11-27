@@ -1,4 +1,9 @@
 @echo off
+rem Git checkouts use the authenticated source updater.
+if exist "%~dp0.git" if exist "%~dp0Play-Slayer.cmd" (
+ call "%~dp0Play-Slayer.cmd"
+ exit /b
+)
 setlocal EnableExtensions DisableDelayedExpansion
 set "STEP=Opening game folder"
 pushd "%~dp0" || goto nofolder
