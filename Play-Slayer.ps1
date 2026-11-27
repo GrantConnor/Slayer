@@ -69,11 +69,8 @@ try {
     if (Test-Path -LiteralPath $marker) { $installed = Get-Content -LiteralPath $marker -Raw }
     if (-not (Test-Path -LiteralPath 'node_modules/electron/dist/electron.exe') -or $installed.Trim() -ne $fingerprint) {
         Write-Host 'Installing required game dependencies...'
-        if (Test-Path -LiteralPath 'package-lock.json') {
-            & npm.cmd ci --no-audit --no-fund
-        } else {
-            & npm.cmd install --no-package-lock --no-audit --no-fund
-        }
+        # Ignore legacy lock files without modifying the tracked checkout.
+        & npm.cmd install --no-package-lock --no-audit --no-fund
         if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed. Check your internet connection and npm output.' }
         if (-not (Test-Path -LiteralPath 'node_modules/electron/dist/electron.exe')) { throw 'Electron installation is incomplete.' }
         Set-Content -LiteralPath $marker -Value $fingerprint -Encoding UTF8
