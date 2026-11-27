@@ -78,7 +78,13 @@ try {
     Write-Host "Launching Slayer Hub Alpha $($pkg.version)"
     # Launch Electron as a separate Windows GUI process, without waiting for it.
     $electron = Join-Path $PSScriptRoot 'node_modules\electron\dist\electron.exe'
-    $game = Start-Process -FilePath $electron -ArgumentList '.' -WorkingDirectory $PSScriptRoot -PassThru
+    # Keep the game's handles separate from the outer launcher's captured output.
+    $logDir = Join-Path $env:LOCALAPPDATA 'Slayer Hub\Logs'
+    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+    $gameLog = Join-Path $logDir 'Game.log'
+    $errorLog = Join-Path $logDir 'Game-error.log'
+    $game = Start-Process -FilePath $electron -ArgumentList '.' -WorkingDirectory $PSScriptRoot -RedirectStandardOutput $gameLog -RedirectStandardError $errorLog -PassThru
+    Write-Host "Game diagnostics: $logDir"
     # Catch immediate startup failures; the game owns its own lifetime afterward.
     if ($game.WaitForExit(1500) -and $game.ExitCode -ne 0) {
         throw "Electron exited during startup (code $($game.ExitCode))."
