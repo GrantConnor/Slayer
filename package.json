@@ -1,6 +1,6 @@
 {
   "name": "slayer-hub",
-  "version": "1.9.47",
+  "version": "1.9.48",
   "main": "main.js",
   "private": true,
   "scripts": {
